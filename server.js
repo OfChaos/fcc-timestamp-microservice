@@ -1,6 +1,9 @@
 var http = require("http");
 var url  = require("url");
 var fs   = require("fs");
+var port = process.env.PORT || 8080;
+var ip   = process.env.IP || "localhost"
+
 
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -16,11 +19,12 @@ var server = http.createServer(function(request, response) {
     if(/^[0-9]+$/.test(query))                              r = getDate(query);
     else if(/^[A-Z]\w+ [0-9]{1,2},? [0-9]{4}$/.test(query)) r = getUnix(query);
     else if(query !== "")                                   r = (JSON.stringify({"unix": null, "natural": "null"}));
-    else if(query === "") {
+    // Testing if this is what makes Heroku crash
+    /*else if(query === "") {
         r = fs.readFileSync("./public/index.html");
 		response.writeHead(200, "Content-Type", "text/html");
 		return response.end(r);
-    }
+    }*/
     
     response.writeHead(200, {"Content-Type": "application/json"});
     response.end(r);
@@ -41,4 +45,4 @@ function getUnix(dateTime) {
     return JSON.stringify({ "unix": timestamp.toString(), "natural": dateTime});
 }
 
-server.listen(process.env.PORT || 8080, process.env.IP || "localhost");
+server.listen(ip, port);
