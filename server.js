@@ -19,7 +19,7 @@ var server = http.createServer(function(request, response) {
     else if(query === "") {
         r = fs.readFileSync("./public/index.html");
 		response.writeHead(200, "Content-Type", "text/html");
-		response.end(r);
+		return response.end(r);
     }
     
     response.writeHead(200, {"Content-Type": "application/json"});
